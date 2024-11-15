@@ -25,7 +25,7 @@ const Todo = () => {
 
   useEffect(() => {
     axios
-      .get("/api/todo")
+      .get("/api/todo/add")
       .then((response) => {
         setTodos(response.data);
       })

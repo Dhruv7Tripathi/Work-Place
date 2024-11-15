@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -10,39 +10,28 @@ interface Params {
   };
 }
 
-export async function POST(req: NextRequest, params: Params) {
+export async function GET(req: NextRequest, { params }: Params) {
   try {
-    const { params: { id } } = params;
+    const { id } = params;
 
     if (!id) {
       return NextResponse.json({ success: false, message: "ID is missing in the request params" }, { status: 400 });
     }
 
-    const { status } = await req.json();
-
-    const task = await prisma.todo.findUnique({
+    const isDeleted = await prisma.todo.delete({
       where: {
-        id
+        id: id
       }
     });
 
-    if (!task) {
+    if (!isDeleted) {
       return NextResponse.json({ success: false, message: "Task not found" }, { status: 404 });
     }
 
-    await prisma.todo.update({
-      where: {
-        id
-      },
-      data: {
-        status
-      }
-    });
+    // const path = req.nextUrl.searchParams.get('path') || "/dashboard";
+    // revalidatePath(path);
 
-    const path = req.nextUrl.searchParams.get('path') || "/dashboard";
-    revalidatePath(path);
-
-    return NextResponse.json({ success: true, message: "Task updated successfully" }, { status: 200 });
+    return NextResponse.json({ success: true, message: "Task deleted successfully" }, { status: 200 });
 
   } catch (error) {
     return NextResponse.json({ success: false, message: "Internal Server Error" }, { status: 500 });
