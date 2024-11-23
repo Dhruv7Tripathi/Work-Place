@@ -30,7 +30,8 @@ const Todo = () => {
         setTodos(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching todos:", error);
+        // console.error("Error fetching todos:", error);
+        alert("An error occurred while fetching todos. Please try again later.");
       });
   }, []);
 
@@ -72,7 +73,7 @@ const Todo = () => {
               </button>
             </div>
 
-            {/* When To Do Section */}
+
             <div className="flex flex-col items-center w-80 space-y-3">
               <label className="font-bold text-black-700 font-serif text-2xl ">When To Do:</label>
               <input
@@ -90,7 +91,6 @@ const Todo = () => {
               </button>
             </div>
 
-            {/* Note Section */}
             <div className="flex flex-col items-center w-80 space-y-3">
               <label className="font-bold text-black-700 text-2xl font-serif">Leave a Note:</label>
               <input
@@ -108,7 +108,6 @@ const Todo = () => {
             </div>
           </div>
 
-          {/* Main Submit Button */}
           <button
             className="w-80 p-3 bg-blue-600 text-white rounded flex items-center justify-center"
             onClick={handleSubmit}
