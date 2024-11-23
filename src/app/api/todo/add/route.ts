@@ -7,29 +7,28 @@ const prisma = new PrismaClient()
 export async function POST(req: NextRequest) {
   try {
     const reqBody = await req.json();
-    const { name, status, email } = reqBody;
+    const { whatToDo, whenToDo, note, status, userId } = reqBody;
 
     const user = await prisma.user.findUnique({
       where: {
-        email
+        id: userId
       }
     });
 
     if (!user) {
       return NextResponse.json({ success: false }, { status: 404 })
     }
+    // const { whatToDo, whenToDo, note, status, userId } = body;
 
-    const isTask = await prisma.todo.create({
+    const newTodo = await prisma.todo.create({
       data: {
-        name,
-        status,
-        userId: user?.id,
-      },
+        whatToDo,
+        whenToDo: new Date(whenToDo),
+        note,
+        status: status || "pending",
+        user: { connect: { id: userId } }
+      }
     });
-
-    if (!isTask) {
-      return NextResponse.json({ success: false, message: "Failed to add task" }, { status: 400 });
-    }
 
     // const path = req.nextUrl.searchParams.get('path') || '/dashboard'
     // revalidatePath(path)

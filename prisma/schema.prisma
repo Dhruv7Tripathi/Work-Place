@@ -14,17 +14,19 @@ datasource db {
 }
 
 model User {
-  id    String   @id @default(uuid())
-  email String   @unique
+  id    String @id @default(uuid())
+  email String @unique
   name  String
-  wife  String[]
   todo  Todo[]
 }
 
 model Todo {
-  id     String @id @default(uuid())
-  name   String
-  status String
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  whatToDo  String
+  whenToDo  DateTime
+  note      String
+  status    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
